@@ -1,8 +1,10 @@
 package com.example.attendance.dao;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,7 +34,7 @@ public class AttendanceDAO {
 				.collect(Collectors.toList());
 	}
 
-	public List<Attendance> findFilteredRecords(String userId, LocalDateTime startDate, LocalDateTime endDate) {
+	public List<Attendance> findFilteredRecords(String userId, LocalDate startDate, LocalDate endDate) {
 		return attendanceRecords.stream()
 				.filter(att -> (userId == null || userId.isEmpty() || att.getUserId().equals(userId)))
 				.filter(att -> (startDate == null || (att.getCheckInTime() != null 
@@ -41,6 +43,10 @@ public class AttendanceDAO {
 				&& !att.getCheckInTime().toLocalDate().isAfter(endDate))))
 				.collect(Collectors.toList());
 	}
+	
+    public List<Attendance> findAll() {
+        return new ArrayList<>(attendanceRecords);
+    }
 
 	public Map<YearMonth, Long> getMonthlyWorkingHours(String userId) {
 		return attendanceRecords.stream()

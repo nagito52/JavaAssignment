@@ -30,7 +30,7 @@
 			<p class="success-message">
 				<c:out value="${sessionScope.successMessage}" />
 			</p>
-			<c:remove val="successMessage" scope="session" />
+			<c:remove var="successMessage" scope="session" />
 		</c:if>
 	</div>
 </body>

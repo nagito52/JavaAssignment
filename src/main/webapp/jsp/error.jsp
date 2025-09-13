@@ -10,7 +10,7 @@
 	<h1>エラーが発生しました</h1>
 	<p>申し訳ありませんが、処理中にエラーが発生しました。</p>
 	<p>
-		エラーメッセージ:<%=exception.getMessage()%>>
+		エラーメッセージ:<%=exception.getMessage()%>
 	</p>
 	<a href="../login.jsp">ログインページに戻る</a>
 </body>

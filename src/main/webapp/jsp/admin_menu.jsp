@@ -5,7 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>管理者メニュー</title>
-<link rel="stylesheet"href="${pageContext.request.contextPath}/style.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
 	<div class="container">
@@ -21,7 +22,7 @@
 			<p class="success-message">
 				<c:out value="${sessionScope.successMessage}" />
 			</p>
-			<c:remove val="successMessage" scope="session" />
+			<c:remove var="successMessage" scope="session" />
 		</c:if>
 
 		<h2>勤怠履歴</h2>
@@ -35,12 +36,12 @@
 			</div>
 
 			<div>
-				<label for="startDate">開始日:</label> <input type="dete"
+				<label for="startDate">開始日:</label> <input type="date"
 					id="startDate" name="startDate"
 					value="<c:out value="${param.startDate}"/>">
 			</div>
 			<div>
-				<label for="endDate">終了日:</label> <input type="dete" id="endDate"
+				<label for="endDate">終了日:</label> <input type="date" id="endDate"
 					name="endDate" value="<c:out value="${param.endDate}"/>">
 			</div>
 			<button type="submit" class="button">フィルタ</button>
@@ -50,8 +51,10 @@
 		</p>
 
 		<a
-			href="attendance?action=export_csv&filterUserId=<c:out value="${param filterUserId}"/>&startDate=
-		<c:out value="${param.startDate}"/>&endDate=<c:out value="${param.endDate}"/>"
+			href="attendance?action=export_csv
+&filterUserId=${param.filterUserId}
+&startDate=${param.startDate}
+&endDate=${param.endDate}"
 			class="button">勤怠履歴をCSVエクスポート</a>
 
 		<h3>勤怠サマリー(合計労働時間)</h3>
@@ -63,12 +66,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<cforEach val="entry" items="${totalHoursByUser}">
-				<tr>
-					<td>${entry.key}</td>
-					<td>${entry.key}</td>
-				</tr>
-				</cforEach>
+				<c:forEach var="entry" items="${totalHoursByUser}">
+					<tr>
+						<td>${entry.key}</td>
+						<td>${entry.value}</td>
+					</tr>
+				</c:forEach>
 				<c:if test="${empty totalHoursByUser}">
 					<tr>
 						<td colspan="2">データがありません。</td>
@@ -80,16 +83,16 @@
 		<h3>月別勤怠グラフ(簡易版)</h3>
 		<h4>月別合計労働時間</h4>
 		<pre>
-<c:forEach val="entry" items="${monthlyWorkingHours}">
-${entry.key}: <c:forEach begin="1" end="${entry.value / 5"}>*</c:forEach> ${entry.value}時間</c:forEach>
+<c:forEach var="entry" items="${monthlyWorkingHours}">
+${entry.key}: <c:forEach begin="1" end="${entry.value / 5}">*</c:forEach> ${entry.value}時間</c:forEach>
 <c:if test="${empty monthlyWorkingHours}">データがありません。</c:if>
 		</pre>
 
 		<h4>月別出勤数</h4>
 		<pre>
-<c:forEach val="entry" items="${monthlyCheckInCounts}">
-${entry.key}: <c:forEach begin="1" end="${entry.value / 5"}>*</c:forEach> ${entry.value}日</c:forEach>
-<c:if test="${empty monthlyCheckCounts}">データがありません。</c:if>
+<c:forEach var="entry" items="${monthlyCheckInCounts}">
+${entry.key}: <c:forEach begin="1" end="${entry.value / 5}">*</c:forEach> ${entry.value}日</c:forEach>
+<c:if test="${empty monthlyCheckInCounts}">データがありません。</c:if>
 		</pre>
 
 		<h3>詳細勤怠履歴</h3>
@@ -103,7 +106,7 @@ ${entry.key}: <c:forEach begin="1" end="${entry.value / 5"}>*</c:forEach> ${entr
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach val="att" items="${allAttendanceRecords}">
+				<c:forEach var="att" items="${allAttendanceRecords}">
 					<tr>
 						<td>${att.userId}</td>
 						<td>${att.checkInTime}</td>
@@ -114,14 +117,14 @@ ${entry.key}: <c:forEach begin="1" end="${entry.value / 5"}>*</c:forEach> ${entr
 								<input type="hidden" name="userId" value="${att.userId}">
 								<input type="hidden" name="checkInTime"
 									value="${att.checkInTime}"> <input type="hidden"
-									name="checkOutTime" value="${att.CheckOutTime}"> <input
+									name="checkOutTime" value="${att.checkOutTime}"> <input
 									type="submit" value="削除" class="button danger"
 									onclick="return confirm('本当にこの勤怠記録を削除しますか？');">
 							</form>
 						</td>
 					</tr>
 				</c:forEach>
-				<c:if test="${empty allAtendanceRecords}">
+				<c:if test="${empty allAttendanceRecords}">
 					<tr>
 						<td colspan="4">データがありません。</td>
 					</tr>
@@ -132,23 +135,28 @@ ${entry.key}: <c:forEach begin="1" end="${entry.value / 5"}>*</c:forEach> ${entr
 		<h2>勤怠記録の手動追加</h2>
 		<form action="attendance" method="post">
 			<input type="hidden" name="action" value="add_manual">
+
 			<p>
 				<label for="manualUserId">ユーザーID:</label> <input type="text"
 					id="manualUserId" name="userId" required>
 			</p>
+
 			<p>
 				<label for="manualCheckInTime">出勤時刻:</label> <input
 					type="datetime-local" id="manualCheckInTime" name="checkInTime"
 					required>
 			</p>
+
 			<p>
-				<label for="manualCheckInTime">退勤時刻(任意):</label> <input
-					type="datetime-local" id="manualCheckInTime" name="checkOutTime">
+				<label for="manualCheckOutTime">退勤時刻(任意):</label> <input
+					type="datetime-local" id="manualCheckOutTime" name="checkOutTime">
 			</p>
-			<div>
-				<input class="button-group">
+
+			<div class="button-group">
+				<input type="submit" value="追加">
 			</div>
 		</form>
+
 	</div>
 </body>
 </html>
