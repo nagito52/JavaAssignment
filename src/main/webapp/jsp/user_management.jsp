@@ -13,10 +13,10 @@
         <p>ようこそ、${user.username}さん(管理者)</p>
 
         <div class="main-nav">
-            <a href="attendance?action=filter">勤怠履歴管理</a>
-            <a href="users?action=list">ユーザー管理</a>
-            <a href="logout">ログアウト</a>
-        </div>
+			<a href="attendance?action=filter" class="button">勤怠履歴管理</a> <a
+				href="users?action=list" class="button">ユーザー管理</a> <a href="logout"
+				class="button">ログアウト</a>
+		</div>
 
         <c:if test="${not empty sessionScope.successMessage}">
             <p class="success-message">
@@ -40,7 +40,7 @@
             <label for="username">ユーザーID:</label>
             <input type="text" id="username" name="username"
                    value="<c:out value='${userToEdit.username}'/>"
-                   <c:if test="${userToEdit != null}">required</c:if> required>
+                   <c:if test="${userToEdit != null}">readonly</c:if> required>
 
             <!-- パスワード -->
             <label for="password">パスワード:</label>

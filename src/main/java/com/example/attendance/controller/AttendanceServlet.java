@@ -170,19 +170,36 @@ public class AttendanceServlet extends HttpServlet {
 							: null;
 
 			if (attendanceDAO.deleteManualAttendance(userId, checkIn, checkOut)) {
-				session.setAttribute("successMessage", "勤怠記録を失敗しました。");
+			    session.setAttribute("successMessage", "勤怠記録を削除しました。"); // ← 修正
 			} else {
-				session.setAttribute("errorMessage", "勤怠記録の削除に失敗しました。");
+			    session.setAttribute("errorMessage", "勤怠記録の削除に失敗しました。");
 			}
 		}
 
 		if ("admin".equals(user.getRole())) {
-			resp.sendRedirect("attendance"
-					+ (req.getParameter("filterUserId") != null ? req.getParameter("filterUserId") : "") +
-					"&startDate=" + (req.getParameter("startDate") != null ? req.getParameter("startDate") : "") +
-					"&endDate=" + (req.getParameter("endDate") != null ? req.getParameter("endDate") : ""));
+		    StringBuilder redirectUrl = new StringBuilder("attendance");
+
+		    // フィルタ用のクエリを付与
+		    String filterUserId = req.getParameter("filterUserId");
+		    String startDate = req.getParameter("startDate");
+		    String endDate = req.getParameter("endDate");
+
+		    boolean hasQuery = false;
+		    if (filterUserId != null && !filterUserId.isEmpty()) {
+		        redirectUrl.append(hasQuery ? "&" : "?").append("filterUserId=").append(filterUserId);
+		        hasQuery = true;
+		    }
+		    if (startDate != null && !startDate.isEmpty()) {
+		        redirectUrl.append(hasQuery ? "&" : "?").append("startDate=").append(startDate);
+		        hasQuery = true;
+		    }
+		    if (endDate != null && !endDate.isEmpty()) {
+		        redirectUrl.append(hasQuery ? "&" : "?").append("endDate=").append(endDate);
+		    }
+
+		    resp.sendRedirect(redirectUrl.toString());
 		} else {
-			resp.sendRedirect("attendance");
+		    resp.sendRedirect("attendance");
 		}
 	}
 
